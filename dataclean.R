@@ -31,3 +31,37 @@ xmlSApply(rootNode,xmlValue)
 xpathSApply(rootNode,"//food",xmlValue)
 xpathSApply(rootNode,"//name",xmlValue)
 xpathSApply(rootNode,"//price",xmlValue)
+
+fileUrl <- "http://espn.go.com/nfl/team/_/name/bal/baltimore-ravens"
+doc <- htmlTreeParse(fileUrl,useInternal=TRUE)
+scores <- xpathSApply(doc,"//li[@class='score']",xmlValue)
+teams <- xpathSApply(doc,"//li[@class='team-name']",xmlValue)
+scores
+
+#question 4
+library(XML)
+fileUrl <- "http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml"
+doc <- xmlTreeParse(fileUrl,useInternal=TRUE)
+rootNode <- xmlRoot(doc)
+xmlName(rootNode)
+names(rootNode)
+
+
+
+table(xpathSApply(rootNode,"//zipcode",xmlValue))
+
+
+#lecture jsonlite
+library(jsonlite)
+jsonData <- fromJSON("https://api.github.com/users/jtleek/repos")
+names(jsonData)
+names(jsonData$owner)
+jsonData$owner$login
+
+#Writing data frames to JSON
+myjson <- toJSON(iris, pretty=TRUE)
+cat(myjson)
+
+#Convert back to JSON
+iris2 <- fromJSON(myjson)
+head(iris2)
