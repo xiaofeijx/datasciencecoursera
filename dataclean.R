@@ -6,14 +6,28 @@ if (!file.exists("data")) {
   dir.create("data")
 }
 fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
-download.file(fileUrl, destfile = "./data/data.xlsx")
+download.file(fileUrl, destfile = "./data/data.xlsx",mode="wb" )
 list.files("./data")
-
 
 library(xlsx)
 dat <- read.xlsx("./data/getdata_data_DATA.gov_NGAP.xlsx",sheetIndex=1,header=T,
                  colIndex=7:15,
                  rowIndex=18:23)
+sum(dat$Zip*dat$Ext,na.rm=T) 
 
 
+#lecture
+library(XML)
+fileUrl <- "http://www.w3school.com.cn/example/xmle/simple.xml"
+doc <- xmlTreeParse(fileUrl,useInternal=TRUE)
+rootNode <- xmlRoot(doc)
+xmlName(rootNode)
+names(rootNode)
+rootNode[[1]]
+rootNode[[1]][[1]]
+rootNode[[1]][[2]]
 
+xmlSApply(rootNode,xmlValue)
+xpathSApply(rootNode,"//food",xmlValue)
+xpathSApply(rootNode,"//name",xmlValue)
+xpathSApply(rootNode,"//price",xmlValue)
