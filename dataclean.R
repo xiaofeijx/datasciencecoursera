@@ -101,3 +101,32 @@ DT1 <- data.table(x=c('a', 'a', 'b', 'dt1'), y=1:4)
 DT2 <- data.table(x=c('a', 'b', 'dt2'), z=5:7)
 setkey(DT1, x); setkey(DT2, x)
 merge(DT1, DT2)
+
+#https://rawgit.com/wiki/Rdatatable/data.table/vignettes/datatable-intro-vignette.html
+
+
+#scraping for web
+
+con = url("http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en")
+htmlCode = readLines(con)
+close(con)
+htmlCode
+
+
+library(XML)
+url <- "http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en"
+html <- htmlTreeParse(url, useInternalNodes=T)
+
+xpathSApply(html, "//title", xmlValue)
+
+
+xpathSApply(html, "//td[@class='gsc_a_c']", xmlValue)
+
+
+library(httr); 
+html2 = GET(url)
+content2 = content(html2,as="text")
+parsedHtml = htmlParse(content2,asText=TRUE)
+xpathSApply(parsedHtml, "//title", xmlValue)
+
+#API
