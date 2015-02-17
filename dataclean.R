@@ -183,3 +183,50 @@ a <- lapply(spIns,sum)
 unlist(a)
 library(plyr)
 ddply(InsectSprays,.(spray),summarise,sum=sum(count))
+
+#quiz3
+#question1
+fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv "
+download.file(fileUrl, destfile = "./data/data.xlsx" )
+list.files("./data")
+
+df <- read.csv("./data/getdata_data_ss06hid.csv")
+str(df)
+df$agricultureLogical <- (df$ACR == 3 & df$AGS == 6)
+which(df$agricultureLogical) 
+
+#question2
+library(jpeg)
+qjpeg <- readJPEG("./data/getdata_jeff.jpg",native=TRUE)
+quantile(qjpeg,probs=c(0.3,0.8))
+
+
+#qustion3
+fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
+download.file(fileUrl, destfile = "./data/one.csv" )
+df1 <- read.csv("./data/one.csv",skip=0,stringsAsFactors=F)
+df1 <- df1[-(1:4),c(1,2,4,5)]
+df1 <- df1[1:190,]
+
+names(df1) <- c("countrycode","ranking","countryname","GDP")
+df1$GDP <- as.numeric(gsub(",","",df1$GDP)
+df1$ranking <- as.numeric(df1$ranking)
+fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv"
+download.file(fileUrl, destfile = "./data/two.csv")
+df2 <- read.csv("./data/two.csv",stringsAsFactors=F)
+df
+str(df1)
+str(df2)
+
+mergedf <- merge(df1,df2,by.x="countrycode",by.y="CountryCode")
+nrow(mergedf)
+library(dplyr)
+sortdf <- arrange(mergedf,GDP)
+sortdf[13,]
+
+group_by(sortdf,Income.Group) %>% summarise(mean(ranking))
+
+
+brk <- quantile(df1$GDP,probs=c(0,0.2,0.4,0.6,0.8,1))
+sortdf$gdpcut <- cut(sortdf$GDP,breaks=brk)
+with(sortdf,table(gdpcut,Income.Group))
