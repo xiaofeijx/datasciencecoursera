@@ -130,3 +130,56 @@ parsedHtml = htmlParse(content2,asText=TRUE)
 xpathSApply(parsedHtml, "//title", xmlValue)
 
 #API
+myapp = oauth_app("twitter",
+                  key="yourConsumerKeyHere",secret="yourConsumerSecretHere")
+sig = sign_oauth1.0(myapp,
+                    token = "yourTokenHere",
+                    token_secret = "yourTokenSecretHere")
+homeTL = GET("https://api.twitter.com/1.1/statuses/home_timeline.json", sig)
+
+json1 = content(homeTL)
+json2 = jsonlite::fromJSON(toJSON(json1))
+json2[1,1:4]
+
+#quiz question4
+
+#http://biostat.jhsph.edu/~jleek/contact.html
+url <- "http://biostat.jhsph.edu/~jleek/contact.html"
+htmlCode = readLines(url)
+nchar(htmlCode[c(10,20,30,100)])
+
+
+#quiz question5
+df <- read.fwf("getdata-wksst8110.for",skip=4,
+               widths=c(-1,9,-5,4,-1,3,-5,4,-1,3,-5,4,-1,3,-5,4,-1,3))
+
+str(df)
+sum(df[,4])
+
+#https://github.com/hadley/httr/blob/master/demo/oauth2-github.r
+
+
+#object.size
+object.size(df)
+print(object.size(df), units = "Mb")
+
+#reshape
+library(reshape2)
+mtcars$carname <- rownames(mtcars)
+carMelt <- melt(mtcars,id=c("carname","gear","cyl"),
+                measure.vars=c("mpg","hp"))
+head(carMelt)
+
+cylData <- dcast(carMelt,cyl~variable)
+cylData
+
+cylData <- dcast(carMelt,cyl~variable,mean)
+cylData
+
+with(InsectSprays,tapply(count,spray,sum))
+
+spIns <- split(InsectSprays$count,InsectSprays$spray)
+a <- lapply(spIns,sum)
+unlist(a)
+library(plyr)
+ddply(InsectSprays,.(spray),summarise,sum=sum(count))
