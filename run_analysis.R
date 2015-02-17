@@ -23,6 +23,8 @@ measurement_test <- measurement_test[,colkeep]
 names(measurement_test) <- feature$V2
 measurement_test$activity <- activities_test$activity
 
+subject_test <- read.table("UCI HAR Dataset/test/subject_test.txt",header=F)
+measurement_test$subject <- subject_test$V1
 
 #reading train files
 #reading activities in to 
@@ -39,11 +41,16 @@ measurement_train <- measurement_train[,colkeep]
 names(measurement_train) <- feature$V2
 measurement_train$activity <- activities_train$activity
 
+subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt",header=F)
+measurement_train$subject <- subject_train$V1
+
 
 totalmeasurement <- rbind(measurement_train,measurement_test)
 
 dim(totalmeasurement)
 names(totalmeasurement)
 
+by_totalmeasurement <- group_by(totalmeasurement,activity,subject)
+lastdf <- summarise_each(by_totalmeasurement,funs(mean)) 
 
-
+lastdf[lastdf$activity=="LAYING",]
