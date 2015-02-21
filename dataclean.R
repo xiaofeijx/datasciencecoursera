@@ -183,3 +183,59 @@ a <- lapply(spIns,sum)
 unlist(a)
 library(plyr)
 ddply(InsectSprays,.(spray),summarise,sum=sum(count))
+
+#dplyr
+library(dplyr)
+
+
+#quiz 4
+if (!file.exists("data")) {
+  dir.create("data")
+}
+fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv "
+download.file(fileUrl, destfile = "./data/q1.csv")
+list.files("./data")
+
+mydf <- read.csv("./data/q1.csv",header=T)
+str(mydf)
+
+strsplit(names(mydf),split="wgtp")[[123]] 
+
+
+#queston2
+
+mydf2 <- read.csv("./data/getdata-data-GDP.csv",header = F)
+str(mydf2)
+mydf3 <- mydf2[6:195,c(5)]
+mydf3 <- sub(",","",mydf3) #run two times
+mean(as.numeric(mydf3))
+
+#question3
+
+mydf4 <-  mydf2[6:195,c(4,5)]
+grep("^United",mydf4$V4)
+
+
+#question4
+mydf5 <- mydf2[6:195,c(1,2,4,5)]
+names(mydf5) <- c("countrycode","ranking","countryname","gdp")
+str(mydf5)
+
+
+mydf6 <- read.csv("./data/getdata-data-EDSTATS_Country.csv")
+str(mydf6)
+
+mydf7 <- merge(mydf5,mydf6,by.x="countrycode",by.y="CountryCode")
+
+grep("^Fiscal year end: Jun",mydf7$Special.Notes)
+
+#question5
+library(quantmod)
+amzn = getSymbols("AMZN",auto.assign=FALSE)
+sampleTimes = index(amzn) 
+class(sampleTimes)
+library(lubridate)
+yy <- year(sampleTimes)
+table(yy)
+wd <- wday(sampleTimes[year(sampleTimes)==2012])
+table(wd)
