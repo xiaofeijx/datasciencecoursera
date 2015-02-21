@@ -117,7 +117,7 @@ write.table(lastdf,file="lastdf.txt",row.name=FALSE)
   numeric variable, have 30 numbers(1 through 30),the subject number indicate which subject the record belong to.
   
   
-below are the average  of mean and standard variance of the original data,it meaning are indicated by it's variable name.it units are unkown.
+below are the average  of mean and standard variance of the original data,it meaning are indicated by it's variable name.it units are standard gravity units 'g'
 
 
 
