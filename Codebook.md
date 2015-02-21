@@ -75,15 +75,26 @@ measurement_train$activity <- activities_train$activity
 
 subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt",header=F)
 measurement_train$subject <- subject_train$V1
+```
 
+then merge the train and test data
+in the totalmeasurement dataset, I have 81 variables, except the last two variables are activity and subject, other varialbes are measurement that contains "mean" , "std"  in the original data set.  actually I dont know the units of the measurenment, because I dont understand the backgroud the this expriment.
+*activity* is a factor varible, with label("WALKING","WALKING_UPSTAIRS","WALKING_DOWNSTAIRS","SITTING","STANDING","LAYING") means what activity the subject has taken.
+*subject* is a number form 1 to 30, which marked whose records that the data  belong to
+
+```{r}
 totalmeasurement <- rbind(measurement_train,measurement_test)
 ```
 
 
 calulate the mean of the records by activity and subject.
+so the activity and suject are the group value and will keep in the lastdf data.frame. following varialbles are average of all the measurement(mean and std) by activity and subject. actually I dont know the units of the measurenment, because I dont understand the backgroud the this expriment.
 ```{r}
 by_totalmeasurement <- group_by(totalmeasurement,activity,subject)
 lastdf <- summarise_each(by_totalmeasurement,funs(mean)) 
 ```
-write.csv(lastdf,file="lastdf.csv")
 
+write the last result to a csv file 
+```{r}
+write.csv(lastdf,file="lastdf.csv")
+```
