@@ -65,4 +65,3 @@ by_totalmeasurement <- group_by(totalmeasurement,activity,subject)
 lastdf <- summarise_each(by_totalmeasurement,funs(mean)) 
 write.table(lastdf,file="lastdf.txt",row.name=FALSE)
 
-lastdf[lastdf$activity=="LAYING",]
