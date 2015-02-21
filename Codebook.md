@@ -3,6 +3,7 @@
 the data is provided by the course project instructions website. I downloaed it using browser and unzip it in the project directory, so all the data in under a subdirectory called *UCI HAR Dataset*. and the details of files i would not explain in detail, because so many have discussed in the forum.
 
  
+##code explainations
 
 load the libraries needed
 ```{r}
@@ -99,10 +100,10 @@ write the last result to a txt file
 write.table(lastdf,file="lastdf.txt",row.name=FALSE)
 ```
 
-variables of lastdf are listed by 
-colunm index - variable name 
+##variables of lastdf are listed by  colunm index - variable name 
 
 1-activity 
+
   character variable,  activity of subject taken, which contain 6 activities, as follow:
   WALKING
   WALKING_UPSTAIRS
@@ -112,10 +113,13 @@ colunm index - variable name
   LAYING
   
 2-subject
+
   numeric variable, have 30 numbers(1 through 30),the subject number indicate which subject the record belong to.
   
   
 below are the average  of mean and standard variance of the original data,it meaning are indicated by it's variable name.
+
+
 
 3-tBodyAcc-mean-X
 4-tBodyAcc-mean-Y
