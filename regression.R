@@ -109,6 +109,9 @@ summary(lm(y~x1))$coef
 
 summary(lm(y~x1+x2))$coef
 
+library(datasets); data(swiss); require(stats); require(graphics)
+pairs(swiss, panel = panel.smooth, main = "Swiss data", col = 3 + (swiss$Catholic > 50))
+
 #R in action
 
 data(women)
@@ -435,3 +438,67 @@ qcc.overdispersion.test(breslow.dat$sumY, type="poisson")
 fit.od <- glm(sumY ~ Base + Age + Trt, data=breslow.dat,
               family=quasipoisson())
 summary(fit.od)
+
+
+
+p <- 1
+n <- 100; x2 <- runif(n); x1 <- p * runif(n) - (1 - p) * x2 
+beta0 <- 0; beta1 <- 1; tau <- 4 ; sigma <- .01
+y <- beta0 + x1 * beta1 + tau * x2 + rnorm(n, sd = sigma)
+plot(x1, y, type = "n", frame = FALSE)
+abline(lm(y ~ x1), lwd = 2)
+co.pal <- heat.colors(n)
+points(x1, y, pch = 21, col = "black", bg = co.pal[round((n - 1) * x2 + 1)], cex = 2)
+
+
+library(rgl)
+plot3d(x1, x2, y)
+
+plot(resid(lm(x1 ~ x2)), resid(lm(y ~ x2)), frame = FALSE, col = "black", bg = "lightblue", pch = 21, cex = 2)
+abline(lm(I(resid(lm(x1 ~ x2))) ~ I(resid(lm(y ~ x2)))), lwd = 2)
+
+
+# simulate data
+n <- 100; t <- rep(c(0, 1), c(n/2, n/2)); x <- c(runif(n/2), 1.5 + runif(n/2));
+# define parameters/coefficients
+beta0 <- 0; beta1 <- 2; beta2 <- 0; sigma <- .2
+# generate outcome using linear model
+y <- beta0 + x * beta1 + t * beta2 + rnorm(n, sd = sigma)
+# set up axes
+plot(x, y, type = "n", frame = FALSE)
+# plot linear fit of y vs x
+abline(lm(y ~ x), lwd = 2, col = "blue")
+# plot means of the two groups (t = 0 vs t = 1)
+abline(h = mean(y[1 : (n/2)]), lwd = 3, col = "red")
+abline(h = mean(y[(n/2 + 1) : n]), lwd = 3, col = "red")
+# plot linear fit of y vs x and t
+fit <- lm(y ~ x + t)
+# plot the two lines corresponding to (t = 0 vs t = 1)
+abline(coef(fit)[1], coef(fit)[2], lwd = 3)
+abline(coef(fit)[1] + coef(fit)[3], coef(fit)[2], lwd = 3)
+# add in the actual data points
+points(x[1 : (n/2)], y[1 : (n/2)], pch = 21, col = "black", bg = "lightblue", cex = 1)
+points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon", cex = 1)
+summary(fit)
+rbind("Treatment Effect" = lm(y~t+x)$coef[2], "Adjustment Effect" = lm(y~t)$coef[2])
+
+
+
+# simulate data
+p <- 1; n <- 100; x2 <- runif(n); x1 <- p * runif(n) - (1 - p) * x2
+
+plot(x2,x1)
+# define parameters/coefficients
+beta0 <- 0; beta1 <- 1; beta2 <- 4 ; sigma <- .01
+# generate outcome using linear model
+y <- beta0 + x1 * beta1 + beta2 * x2 + rnorm(n, sd = sigma)
+
+summary(lm(y~x1+x2))
+# plot y vs x1 and x2
+qplot(x1, y) + geom_point(aes(colour=x2)) + geom_smooth(method = lm)
+
+plot(resid(lm(x1 ~ x2)), resid(lm(y ~ x2)), frame = FALSE,
+col = "black", bg = "lightblue", pch = 21, cex = 1)
+# add linear fit line
+fit4 <- lm(I(resid(lm(y ~ x2))) ~ I(resid(lm(x1 ~ x2))))
+summary(fit4)
