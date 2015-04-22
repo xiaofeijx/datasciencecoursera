@@ -502,3 +502,46 @@ col = "black", bg = "lightblue", pch = 21, cex = 1)
 # add linear fit line
 fit4 <- lm(I(resid(lm(y ~ x2))) ~ I(resid(lm(x1 ~ x2))))
 summary(fit4)
+
+
+#quiz 4
+library(MASS)
+data(shuttle)
+str(shuttle)
+head(shuttle)
+shuttle$use
+shuttle$wind <- factor(shuttle$wind,levels=c("tail","head"))
+shuttle$use <- factor(shuttle$use,levels=c("noauto","auto"))
+fit <- glm(use~wind,data=shuttle,family=binomial(link="logit"))
+summary(fit)
+
+fit2 <- glm(use~wind+magn,data=shuttle,family=binomial(link="logit"))
+summary(fit2)
+
+shuttle$use <- factor(shuttle$use,levels=c("auto","noauto"))
+fit3 <- glm(use~wind+magn,data=shuttle,family=binomial(link="logit"))
+summary(fit3)
+
+
+data(InsectSprays)
+str(InsectSprays)
+summary(InsectSprays)
+fit4 <- glm(I(count+1)~spray,data=InsectSprays,family=poisson(link="logit"))
+fit4 <- glm(count~spray-1,data=InsectSprays,family=poisson(link="log"))
+summary(fit4)
+
+with(InsectSprays,plot(spray,count))
+exp(2.67415-2.73003)
+
+
+data(breslow.dat,package="robust")
+fit5 <- glm(sumY~Base+Age+Trt+offset(Base4),data=breslow.dat,family=poisson)
+summary(fit5)
+str(breslow.dat)
+fit5 <- glm(sumY~Base+Age+Trt+offset(I(log(10)+Base4)),data=breslow.dat,family=poisson)
+summary(fit5)
+
+
+x <- -5:5
+y <- c(5.12, 3.93, 2.67, 1.87, 0.52, 0.08, 0.93, 2.05, 2.54, 3.87, 4.97)
+plot(x,y)
