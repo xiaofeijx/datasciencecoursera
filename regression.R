@@ -71,24 +71,33 @@ y <- c(0.67, 0.84, 0.6, 0.18, 0.85, 0.47, 1.1, 0.65, 0.36)
 fit <- lm(y~x)
 summary(fit)
 
-
+# quiz 3
 data(mtcars)
 str(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
 fit <- lm(mpg~factor(cyl)+wt,data=mtcars)
 fit2 <- lm(mpg~factor(cyl),data=mtcars)
 summary(fit)
 summary(fit2)
-fit3 <- lm(mpg~factor(cyl)+wt+factor(cyl)*wt,data=mtcars)
+
+fit3 <- lm(mpg~factor(cyl)*wt,data=mtcars)
 summary(fit3)
 
 anova(fit,fit3)
+newdata <- data.frame(wt=c(0,1),cyl= factor(c(4,4)))
+fit <- lm(mpg~cyl+wt,data=mtcars)
+fit5 <- lm(mpg ~ I(wt * 0.5) + cyl, data = mtcars)
+
+predict(fit,newdata)
+predict(fit5,newdata)
 
 x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
 y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
+plot(x,y)
 fit4 <- lm(y~x)
 summary(fit4)
 hatvalues(fit4)
-dfbeta(fit4) 
+dfbetas(fit4) 
 
 x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
 y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
@@ -504,6 +513,7 @@ fit4 <- lm(I(resid(lm(y ~ x2))) ~ I(resid(lm(x1 ~ x2))))
 summary(fit4)
 
 
+<<<<<<< HEAD
 #quiz 4
 library(MASS)
 data(shuttle)
@@ -568,3 +578,27 @@ yhat <- predict(lm(y ~ xMat))
 plot(x, y, frame = FALSE, pch = 21, bg = "lightblue")
 # plot fitted values
 lines(x, yhat, col = "red", lwd = 2)
+=======
+
+n <- 100; nosim <- 1000
+# generate 3 random noise, unrelated variables
+x1 <- rnorm(n); x2 <- rnorm(n); x3 <- rnorm(n);
+# calculate beta1s of three different regression
+betas <- sapply(1 : nosim, function(i){
+  # generate outcome as only related to x1
+  y <- x1 + rnorm(n, sd = .3)
+  # store beta1 of linear regression on y vs x1
+  c(coef(lm(y ~ x1))[2],
+    # store beta1 of linear regression on y vs x1 and x2
+    coef(lm(y ~ x1 + x2))[2],
+    # store beta1 of linear regression on y vs x1 x2 and x3
+    coef(lm(y ~ x1 + x2 + x3))[2])
+})
+dim(betas)
+# calculate the standard error of the beta1s for the three regressions
+beta1.se <- round(apply(betas, 1, sd), 5)
+# print results
+rbind("y ~ x1" = c("beta1SE" = beta1.se[1]),
+      "y ~ x1 + x2" = beta1.se[2],
+      "y ~ x1 + x2 + x3" = beta1.se[3])
+>>>>>>> 9b2f18acb15a34109e9a0b2c26a7c6e9998ca21c
