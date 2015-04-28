@@ -517,6 +517,72 @@ summary(fit4)
 
 
 
+#quiz 4
+library(MASS)
+data(shuttle)
+str(shuttle)
+head(shuttle)
+shuttle$use
+shuttle$wind <- factor(shuttle$wind,levels=c("tail","head"))
+shuttle$use <- factor(shuttle$use,levels=c("noauto","auto"))
+fit <- glm(use~wind,data=shuttle,family=binomial(link="logit"))
+summary(fit)
+
+fit2 <- glm(use~wind+magn,data=shuttle,family=binomial(link="logit"))
+summary(fit2)
+
+shuttle$use <- factor(shuttle$use,levels=c("auto","noauto"))
+fit3 <- glm(use~wind+magn,data=shuttle,family=binomial(link="logit"))
+summary(fit3)
+
+
+data(InsectSprays)
+str(InsectSprays)
+summary(InsectSprays)
+fit4 <- glm(I(count+1)~spray,data=InsectSprays,family=poisson(link="logit"))
+fit4 <- glm(count~spray-1,data=InsectSprays,family=poisson(link="log"))
+summary(fit4)
+
+with(InsectSprays,plot(spray,count))
+exp(2.67415-2.73003)
+
+
+data(breslow.dat,package="robust")
+fit5 <- glm(sumY~Base+Age+Trt+offset(Base4),data=breslow.dat,family=poisson)
+summary(fit5)
+str(breslow.dat)
+fit5 <- glm(sumY~Base+Age+Trt+offset(I(log(10)+Base4)),data=breslow.dat,family=poisson)
+summary(fit5)
+
+
+x <- -5:5
+y <- c(5.12, 3.93, 2.67, 1.87, 0.52, 0.08, 0.93, 2.05, 2.54, 3.87, 4.97)
+plot(x,y)
+knots <- 0
+splineTerms <- sapply(knots, function(knot) (x > knot) * (x - knot))
+xMat <- cbind(x, splineTerms)
+fit <- lm(y~xMat) 
+summary(fit)
+
+
+# simulate data
+n <- 500; x <- seq(0, 4 * pi, length = n); y <- sin(x) + rnorm(n, sd = .3)
+# define 20 knot points
+knots <- seq(0, 8 * pi, length = 20);
+range(x)
+# define the ()+ function to only take the values that are positive after the knot pt
+splineTerms <- sapply(knots, function(knot) (x > knot) * (x - knot))
+# define the predictors as X and spline term
+xMat <- cbind(x, splineTerms)
+head(xMat)
+# fit linear models for y vs predictors
+yhat <- predict(lm(y ~ xMat))
+# plot data points (x, y)
+plot(x, y, frame = FALSE, pch = 21, bg = "lightblue")
+# plot fitted values
+lines(x, yhat, col = "red", lwd = 2)
+=======
+
 n <- 100; nosim <- 1000
 # generate 3 random noise, unrelated variables
 x1 <- rnorm(n); x2 <- rnorm(n); x3 <- rnorm(n);
@@ -540,6 +606,7 @@ rbind("y ~ x1" = c("beta1SE" = beta1.se[1]),
       "y ~ x1 + x2 + x3" = beta1.se[3])
 
 
+
 #===logistic regrssion=====
 library(foreign)
 evans <- read.csv("evans.csv",header=TRUE)
@@ -561,3 +628,4 @@ anova(fit,fit2)
 exp(coef(fit2)[3]+coef(fit2)[8]*rep(c(200,220,240),times=2)+coef(fit2)[9]*rep(c(0,1),each=3))
 
 vcov(fit2)
+
