@@ -18,7 +18,10 @@ lm(y~x-1)
 #===========
 data(mtcars)
 str(mtcars)
-lm(mpg~wt,data=mtcars)
+fit1<- lm(mpg~wt,data=mtcars)
+summary(fit1)
+fit2<- lm(mpg~wt-1,data=mtcars)
+summary(fit2)
 
 #=====
 1.5/0.4
@@ -535,3 +538,26 @@ beta1.se <- round(apply(betas, 1, sd), 5)
 rbind("y ~ x1" = c("beta1SE" = beta1.se[1]),
       "y ~ x1 + x2" = beta1.se[2],
       "y ~ x1 + x2 + x3" = beta1.se[3])
+
+
+#===logistic regrssion=====
+library(foreign)
+evans <- read.csv("evans.csv",header=TRUE)
+str(evans)
+nrow(evans)
+fit <- glm(chd~cat+age+chl+ecg+smk+hpt,data=evans,family=binomial(link="logit"))
+summary(fit)$deviance
+names(summary(fit))
+exp(cbind(coef(fit),confint(fit)))
+reducedmodel <-glm(chd~age+chl+ecg+smk+hpt,data=evans,family=binomial(link="logit"))
+anova(fit,reducedmodel)
+
+fit2 <- glm(chd~age+cat*chl+ecg+smk+cat*hpt,data=evans,family=binomial(link="logit"))
+summary(fit2)$deviance
+summary(fit2)
+anova(fit,fit2)
+
+
+exp(coef(fit2)[3]+coef(fit2)[8]*rep(c(200,220,240),times=2)+coef(fit2)[9]*rep(c(0,1),each=3))
+
+vcov(fit2)
